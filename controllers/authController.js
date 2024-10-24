@@ -1,14 +1,19 @@
 
 import UserAuth from "../modals/auth.js"
-
+import { v4 as uuidv4 } from 'uuid';
 export async function register(req, res) {
 
     const auth = req.body // user send data in body from client side
     if (!auth.phone || !auth.password || !auth.name) {
         return res.status(400).json({ success: false, message: "Please provide all fields" })
     }
-
-    const newUser = new UserAuth(auth)
+    const userId = uuidv4();
+    const newUser = new UserAuth({
+        userId: userId,
+        phone: auth.phone,
+        password: auth.password,
+        name: auth.name
+    })
 
     try {
         await newUser.save();
