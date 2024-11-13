@@ -20,9 +20,11 @@ io.on('connection', (socket) => {
 
     socket.on('userConnected', ({ userId }) => {
         console.log(`${userId} connected`);
-    
-        userOnline(userId);
+
+        //   userOnline(userId);
         onlineUsers.set(socket.id, userId);
+        console.log(onlineUsers)
+        io.emit('userStatusUpdate', Array.from(onlineUsers.values()));
     });
 
 
@@ -32,7 +34,7 @@ io.on('connection', (socket) => {
         saveChats(message)
         try {
 
-           //broadcast the message to all connected clients
+            //broadcast the message to all connected clients
             io.emit('chatMessage', message);
         } catch (error) {
             console.log(error)
@@ -44,8 +46,10 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         const userId = onlineUsers.get(socket.id);
-      
-        deleteUserOnline(userId)
+        console.log(userId,'........disconnected user')
+        onlineUsers.delete(socket.id);
+        io.emit('userStatusUpdate', Array.from(onlineUsers));
+        // deleteUserOnline(userId)
         console.log('user disconnected');
     });
 });

@@ -1,6 +1,9 @@
 
 import UserAuth from "../modals/auth.js"
 import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
 export async function register(req, res) {
 
     const auth = req.body // user send data in body from client side
@@ -8,10 +11,11 @@ export async function register(req, res) {
         return res.status(400).json({ success: false, message: "Please provide all fields" })
     }
     const userId = uuidv4();
+    const hashedPassword = await bcrypt.hash(auth.password, saltRounds);
     const newUser = new UserAuth({
         userId: userId,
         phone: auth.phone,
-        password: auth.password,
+        password: hashedPassword,
         name: auth.name
     })
 
@@ -29,7 +33,7 @@ export async function register(req, res) {
 export async function fetchAllUsers(req, res) {
 
     try {
-        const users = await UserAuth.find({}).select('phone name')
+        const users = await UserAuth.find({}).select('phone name userId')
         //find  will  retrieve multiple documents 
         res.status(200).json({
             success: true,
@@ -43,16 +47,28 @@ export async function fetchAllUsers(req, res) {
 export async function loginUser(req, res) {
 
     let { name, password } = req.body;
+
+
     if (!name || !password) {
         return res.status(400).json({ success: false, message: "Please provide all fields" });
     }
+
+
     try {
-        const user = await UserAuth.findOne({ name: name, password: password }).select('phone name')
+        const user = await UserAuth.findOne({ name: name }).select('phone name userId password')
+
+        const validPassword = await bcrypt.compare(password, user.password);
+
         //find one will  retrieve a single document that matches a specified query 
         //select will only return the specified data
         if (!user) {
             res.status(404).send({ message: "No  User Found" })
-        } else {
+
+        }
+        else if (!validPassword) {
+            return res.status(400).json({ success: false, message: "Email or password is incorrect." })
+        }
+        else {
             res.status(200).json({ success: true, data: user })
         }
     } catch (error) {

@@ -54,8 +54,8 @@ export async function deleteUserOnline(userId, res) {
 
     try {
 
-        await UserActive.deleteOne({ userId: userId });
-
+        const result = await UserActive.deleteOne({ userId: userId });
+        console.log(result)
         // res.status(200).json({
         //     success: true,
 
@@ -73,7 +73,7 @@ export async function checkUserOnline(req, res) {
     try {
         const userId = req.params.userId;
 
-        const isOnline = await UserActive.exists({ userId });
+        const isOnline = await UserActive.findOne({ userId: userId }).select('userId');
 
         res.status(200).json({
             success: true,
