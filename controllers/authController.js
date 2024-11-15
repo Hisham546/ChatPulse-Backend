@@ -1,9 +1,11 @@
 
 import UserAuth from "../modals/auth.js"
 import { v4 as uuidv4 } from 'uuid';
-import jwt from 'jsonwebtoken';
+import { generateJwtToken } from "../helpers/jwt.js";
 import bcrypt from 'bcrypt';
+
 const saltRounds = 10;
+
 export async function register(req, res) {
 
     const auth = req.body // user send data in body from client side
@@ -12,11 +14,14 @@ export async function register(req, res) {
     }
     const userId = uuidv4();
     const hashedPassword = await bcrypt.hash(auth.password, saltRounds);
+    const token = await generateJwtToken(auth, userId)
+
     const newUser = new UserAuth({
         userId: userId,
         phone: auth.phone,
         password: hashedPassword,
-        name: auth.name
+        name: auth.name,
+        token
     })
 
     try {

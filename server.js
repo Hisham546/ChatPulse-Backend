@@ -4,10 +4,13 @@ import { connectDB } from "./config/db.js";
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { register, fetchAllUsers, loginUser } from "./controllers/authController.js";
-
+//const crypto = require('crypto');
+import crypto from "crypto"
 import { saveChats, getAllTexts, userOnline, checkUserOnline, deleteUserOnline } from "./controllers/chatsController.js";
 dotenv.config();
+// const secretKey = crypto.randomBytes(32).toString('hex');
 
+// console.log('Generated Secret Key:', secretKey);
 const app = express()
 app.use(express.json()) //allow accept json data in req.body
 
