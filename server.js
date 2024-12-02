@@ -4,9 +4,13 @@ import { connectDB } from "./config/db.js";
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { register, fetchAllUsers, loginUser } from "./controllers/authController.js";
-//const crypto = require('crypto');
-import crypto from "crypto"
+import { uploadImages } from "./controllers/storageController.js";
+//import crypto from "crypto"
 import { saveChats, getAllTexts, userOnline, checkUserOnline, deleteUserOnline } from "./controllers/chatsController.js";
+
+
+import multer from 'multer'
+const upload = multer({ storage: multer.memoryStorage() });
 dotenv.config();
 // const secretKey = crypto.randomBytes(32).toString('hex');
 
@@ -62,6 +66,7 @@ app.get("/api/users", fetchAllUsers)
 app.post("/api/login", loginUser)
 app.get("/api/user-chats", getAllTexts)
 app.get("/api/online-status/:userId", checkUserOnline)
+app.post('/api/upload',upload.single('file'),uploadImages)
 
 server.listen(5000, () => {
     connectDB()

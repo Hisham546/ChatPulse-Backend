@@ -60,7 +60,7 @@ export async function loginUser(req, res) {
 
 
     try {
-        const user = await UserAuth.findOne({ name: name }).select('phone name userId password')
+        const user = await UserAuth.findOne({ name: name }).select('phone name userId password token')
 
         const validPassword = await bcrypt.compare(password, user.password);
 

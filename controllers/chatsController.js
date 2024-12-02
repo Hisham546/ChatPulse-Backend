@@ -55,7 +55,7 @@ export async function deleteUserOnline(userId, res) {
     try {
 
         const result = await UserActive.deleteOne({ userId: userId });
-        console.log(result)
+      //  console.log(result)
         // res.status(200).json({
         //     success: true,
 
