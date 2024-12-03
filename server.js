@@ -67,8 +67,8 @@ app.post("/api/login", loginUser)
 app.get("/api/user-chats", getAllTexts)
 app.get("/api/online-status/:userId", checkUserOnline)
 app.post('/api/upload',upload.single('file'),uploadImages)
-
-server.listen(5000, () => {
+const port = process.env.PORT || 5000;
+server.listen(port, () => {
     connectDB()
     console.log('server started at http://localhost:5000 ...')
 })
