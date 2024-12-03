@@ -3,10 +3,11 @@ import cloudinary from '../helpers/storageConfig.js';
 import multer from 'multer'
 const upload = multer({ storage: multer.memoryStorage() });
 
-console.log(cloudinary,'........cloudinary'); 
+
 
 
 export async function uploadImages(req, res) {
+   
     try {
         // Multer provides the file in req.file
         const file = req.file;
