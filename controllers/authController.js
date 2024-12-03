@@ -74,7 +74,7 @@ export async function loginUser(req, res) {
             return res.status(400).json({ success: false, message: "Email or password is incorrect." })
         }
         else {
-            res.status(200).json({ success: true, data: { token: user.token, phone: user.phone, userId: user.userId } })
+            res.status(200).json({ success: true, data: { token: user.token, phone: user.phone, userId: user.userId, name: user.name } })
         }
     } catch (error) {
         return res.status(500).json({ success: false, message: error })
