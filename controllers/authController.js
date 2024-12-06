@@ -21,7 +21,8 @@ export async function register(req, res) {
         phone: auth.phone,
         password: hashedPassword,
         name: auth.name,
-        token
+        token,
+        imageUrl: auth.imageUrl
     })
 
     try {
@@ -38,7 +39,7 @@ export async function register(req, res) {
 export async function fetchAllUsers(req, res) {
 
     try {
-        const users = await UserAuth.find({}).select('phone name userId')
+        const users = await UserAuth.find({}).select('phone name userId imageUrl')
         //find  will  retrieve multiple documents 
         res.status(200).json({
             success: true,
@@ -60,7 +61,7 @@ export async function loginUser(req, res) {
 
 
     try {
-        const user = await UserAuth.findOne({ name: name }).select('phone name userId password token')
+        const user = await UserAuth.findOne({ name: name }).select('phone name userId password token imageUrl')
 
         const validPassword = await bcrypt.compare(password, user.password);
 
@@ -74,7 +75,7 @@ export async function loginUser(req, res) {
             return res.status(400).json({ success: false, message: "Email or password is incorrect." })
         }
         else {
-            res.status(200).json({ success: true, data: { token: user.token, phone: user.phone, userId: user.userId, name: user.name } })
+            res.status(200).json({ success: true, data: { token: user.token, phone: user.phone, userId: user.userId, name: user.name, imageUrl: user.imageUrl } })
         }
     } catch (error) {
         return res.status(500).json({ success: false, message: error })

@@ -7,7 +7,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 
 export async function uploadImages(req, res) {
-   
+  
     try {
         // Multer provides the file in req.file
         const file = req.file;
@@ -17,10 +17,10 @@ export async function uploadImages(req, res) {
 
         // Upload file buffer to Cloudinary
         cloudinary.uploader.upload_stream(
-            { public_id: 'images' },
+            { public_id: req.file.originalname },
             (error, result) => {
                 if (error) {
-                    console.error('Cloudinary Upload Error:', error);
+
                     return res.status(500).json({ status: false, message: 'Upload failed' });
                 }
                 res.status(200).json({ status: true, data: result.url });

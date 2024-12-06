@@ -6,7 +6,8 @@ const authSchema = mongoose.Schema({
     phone: { type: Number, required: true, },
     password: { type: String, required: true, },
     name: { type: String, required: true },
-    token:{type:String}
+    token: { type: String },
+    imageUrl: { type: String },
 
 }, {
     timeStamps: true
