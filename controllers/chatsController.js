@@ -2,10 +2,12 @@
 import UserChats from "../modals/message.js";
 
 import UserActive from "../modals/activeStatus.js"
+import { v4 as uuidv4 } from 'uuid';
 export async function saveChats(message) {
-
+    const chatId = uuidv4();
 
     const newMessage = new UserChats({
+        textId: chatId,
         message: message.message,
         sender: message.sender,
         reciever: message.reciever,
@@ -55,7 +57,7 @@ export async function deleteUserOnline(userId, res) {
     try {
 
         const result = await UserActive.deleteOne({ userId: userId });
-      //  console.log(result)
+        //  console.log(result)
         // res.status(200).json({
         //     success: true,
 
@@ -81,6 +83,28 @@ export async function checkUserOnline(req, res) {
         })
 
     } catch (error) {
+        return res.status(500).json({ status: false, message: error.message });
+
+    }
+};
+
+export async function deleteMessages(messageId, res) {
+    //console.log(messageId, '..........messageId')
+    try {
+
+        const chats = await UserChats.findOne({ _id: messageId })
+
+        // const result = await UserChats.deleteOne({
+        //     _id: messageId
+        // });
+        console.log(chats)
+        res.status(200).json({
+            success: true,
+
+        })
+
+    } catch (error) {
+
         return res.status(500).json({ status: false, message: error.message });
 
     }

@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { register, fetchAllUsers, loginUser } from "./controllers/authController.js";
 import { uploadImages } from "./controllers/storageController.js";
 //import crypto from "crypto"
-import { saveChats, getAllTexts, userOnline, checkUserOnline, deleteUserOnline } from "./controllers/chatsController.js";
+import { saveChats, getAllTexts, userOnline, checkUserOnline, deleteUserOnline, deleteMessages } from "./controllers/chatsController.js";
 
 
 import multer from 'multer'
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     socket.on('userTyping', ({ userId }) => {
 
         typingUsers.set(socket.id, userId);
-       // console.log(typingUsers, '..........typing users')
+        // console.log(typingUsers, '..........typing users')
         io.emit('userTypingUpdate', Array.from(typingUsers.values()));
     });
 
@@ -80,8 +80,12 @@ app.post("/api/auth", register)
 app.get("/api/users", fetchAllUsers)
 app.post("/api/login", loginUser)
 app.get("/api/user-chats", getAllTexts)
+app.get("/api/delete-messages/:messageId", deleteMessages)
 app.get("/api/online-status/:userId", checkUserOnline)
 app.post('/api/upload', upload.single('file'), uploadImages)
+
+
+
 const port = process.env.PORT || 5000;
 server.listen(port, () => {
     connectDB()
