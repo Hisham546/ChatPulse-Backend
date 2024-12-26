@@ -89,7 +89,7 @@ export async function checkUserOnline(req, res) {
 };
 
 export async function deleteMessages(req, res) {
-    console.log(req.params.messageId, '..........messageId')
+  
     const messageId = req.params.messageId;
     try {
 
