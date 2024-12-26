@@ -22,6 +22,7 @@ app.use(express.json()) //allow accept json data in req.body
 const server = createServer(app);
 const io = new Server(server);
 const onlineUsers = new Map();
+const typingUsers = new Map();
 // When a client connects to the WebSocket
 io.on('connection', (socket) => {
 
@@ -30,10 +31,24 @@ io.on('connection', (socket) => {
 
         //   userOnline(userId);
         onlineUsers.set(socket.id, userId);
-        console.log(onlineUsers)
+
         io.emit('userStatusUpdate', Array.from(onlineUsers.values()));
     });
 
+
+    socket.on('userTyping', ({ userId }) => {
+
+        typingUsers.set(socket.id, userId);
+       // console.log(typingUsers, '..........typing users')
+        io.emit('userTypingUpdate', Array.from(typingUsers.values()));
+    });
+
+    socket.on('userTypingStop', ({ userId }) => {
+
+        typingUsers.delete(socket.id, userId);
+        //console.log(typingUsers, '..........user stop')
+        io.emit('userTypingUpdate', Array.from(typingUsers.values()));
+    });
 
     // Handle chat messages or other events here
     socket.on('chatMessage', async (message) => {
@@ -53,7 +68,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         const userId = onlineUsers.get(socket.id);
-        console.log(userId,'........disconnected user')
+        console.log(userId, '........disconnected user')
         onlineUsers.delete(socket.id);
         io.emit('userStatusUpdate', Array.from(onlineUsers));
         // deleteUserOnline(userId)
@@ -66,7 +81,7 @@ app.get("/api/users", fetchAllUsers)
 app.post("/api/login", loginUser)
 app.get("/api/user-chats", getAllTexts)
 app.get("/api/online-status/:userId", checkUserOnline)
-app.post('/api/upload',upload.single('file'),uploadImages)
+app.post('/api/upload', upload.single('file'), uploadImages)
 const port = process.env.PORT || 5000;
 server.listen(port, () => {
     connectDB()
