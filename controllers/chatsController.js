@@ -88,18 +88,20 @@ export async function checkUserOnline(req, res) {
     }
 };
 
-export async function deleteMessages(messageId, res) {
-    //console.log(messageId, '..........messageId')
+export async function deleteMessages(req, res) {
+    console.log(req.params.messageId, '..........messageId')
+    const messageId = req.params.messageId;
     try {
 
-        const chats = await UserChats.findOne({ _id: messageId })
+   
 
-        // const result = await UserChats.deleteOne({
-        //     _id: messageId
-        // });
-        console.log(chats)
+        const result = await UserChats.deleteOne({
+            textId: messageId
+        });
+    
         res.status(200).json({
             success: true,
+            data: result
 
         })
 
