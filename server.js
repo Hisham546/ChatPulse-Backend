@@ -6,6 +6,7 @@ import { createServer } from 'http';
 import { register, fetchAllUsers, loginUser } from "./controllers/authController.js";
 import { uploadImages } from "./controllers/storageController.js";
 //import crypto from "crypto"
+import { v4 as uuidv4 } from 'uuid';
 import { saveChats, getAllTexts, userOnline, checkUserOnline, deleteUserOnline, deleteMessages } from "./controllers/chatsController.js";
 
 
@@ -39,25 +40,26 @@ io.on('connection', (socket) => {
     socket.on('userTyping', ({ userId }) => {
 
         typingUsers.set(socket.id, userId);
-        // console.log(typingUsers, '..........typing users')
+
         io.emit('userTypingUpdate', Array.from(typingUsers.values()));
     });
 
     socket.on('userTypingStop', ({ userId }) => {
 
         typingUsers.delete(socket.id, userId);
-        //console.log(typingUsers, '..........user stop')
+
         io.emit('userTypingUpdate', Array.from(typingUsers.values()));
     });
 
     // Handle chat messages or other events here
     socket.on('chatMessage', async (message) => {
+        const chatId = uuidv4();
         console.log('Message received:', message);
-        saveChats(message)
+        saveChats({ chatId, ...message })
         try {
 
             //broadcast the message to all connected clients
-            io.emit('chatMessage', message);
+            io.emit('chatMessage', { chatId, ...message });
         } catch (error) {
             console.log(error)
 

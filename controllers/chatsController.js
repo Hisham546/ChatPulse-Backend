@@ -4,10 +4,10 @@ import UserChats from "../modals/message.js";
 import UserActive from "../modals/activeStatus.js"
 import { v4 as uuidv4 } from 'uuid';
 export async function saveChats(message) {
-    const chatId = uuidv4();
+    //const chatId = uuidv4();
 
     const newMessage = new UserChats({
-        textId: chatId,
+        textId: message.chatId,
         message: message.message,
         sender: message.sender,
         reciever: message.reciever,
