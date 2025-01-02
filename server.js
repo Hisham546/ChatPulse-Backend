@@ -53,13 +53,13 @@ io.on('connection', (socket) => {
 
     // Handle chat messages or other events here
     socket.on('chatMessage', async (message) => {
-        const chatId = uuidv4();
+        const textId = uuidv4();
         console.log('Message received:', message);
-        saveChats({ chatId, ...message })
+        saveChats({ textId, ...message })
         try {
 
             //broadcast the message to all connected clients
-            io.emit('chatMessage', { chatId, ...message });
+            io.emit('chatMessage', { textId, ...message });
         } catch (error) {
             console.log(error)
 

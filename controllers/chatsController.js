@@ -7,7 +7,7 @@ export async function saveChats(message) {
     //const chatId = uuidv4();
 
     const newMessage = new UserChats({
-        textId: message.chatId,
+        textId: message.textId,
         message: message.message,
         sender: message.sender,
         reciever: message.reciever,
